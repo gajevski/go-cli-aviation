@@ -2,6 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"io"
+	"log"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
@@ -20,6 +23,23 @@ to quickly create a Cobra application.`,
 
 func greet(cmd *cobra.Command, args []string) {
 	fmt.Println("above me called")
+	fetchFlightsAboveMeData()
+}
+
+func fetchFlightsAboveMeData() {
+	url := "https://opensky-network.org/api/states/all?lamin=50.401&lomin=19.382&lamax=50.459&lomax=19.515"
+
+	response, err := http.Get(url)
+	if err != nil {
+		log.Fatalf("Error fetching opensky-network data %v", err)
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalf("Error fetching opensky-network data %v", err)
+	}
+
+	fmt.Printf("data:\n%s\n", string(body))
 }
 
 func init() {
