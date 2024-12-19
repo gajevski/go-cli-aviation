@@ -27,9 +27,7 @@ func greet(cmd *cobra.Command, args []string) {
 }
 
 func fetchFlightsAboveMeData() {
-	url := "https://opensky-network.org/api/states/all?lamin=50.401&lomin=19.382&lamax=50.459&lomax=19.515"
-
-	response, err := http.Get(url)
+	response, err := http.Get(prepareAPIUrl())
 	if err != nil {
 		log.Fatalf("Error fetching opensky-network data %v", err)
 	}
@@ -40,6 +38,17 @@ func fetchFlightsAboveMeData() {
 	}
 
 	fmt.Printf("data:\n%s\n", string(body))
+}
+
+func prepareAPIUrl() string {
+	laMin := "50.401"
+	loMin := "19.382"
+	laMax := "50"
+	loMax := "19.515"
+	return fmt.Sprintf(
+		"https://opensky-network.org/api/states/all?lamin=%s&lomin=%s&lamax=%s&lomax=%s",
+		laMin, loMin, laMax, loMax,
+	)
 }
 
 func init() {
